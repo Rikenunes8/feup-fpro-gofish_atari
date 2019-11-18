@@ -5,19 +5,7 @@
 
 #### Objetivo
 
-1. Criar um clone do clássico Go Fish em Pygame
-
-
-#### Repositório de código
-
-1) Link para o repositório do GitHub: \<https://github.com/fpro-feup/public\>
-
-2) Adicionar os profs da Unidade:
-
-- https://github.com/fernandocassola
-- https://github.com/rpmcruz
-- https://github.com/jlopes60
-- https://github.com/rcamacho
+Criar um clone do jogo [Go Fish](http://www.free80sarcade.com/2600_Go_Fish.php) (Atari 2600) em Pygame
 
 #### Descrição
 
