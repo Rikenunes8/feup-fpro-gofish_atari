@@ -26,7 +26,7 @@
 
 #### UI
 
-![Environment](https://github.com/Rikenunes8/gofish-atari/blob/master/Environment.png) = 250x250 
+![Environment](https://github.com/Rikenunes8/gofish-atari/blob/master/Environment.png = 250x250) 
 
 ### Pacotes
 
