@@ -7,7 +7,6 @@
 
 1. Criar um clone do clássico Go Fish em Pygame
 
-2. \<Em alternativa... do clássico x em Pygame\>
 
 #### Repositório de código
 
@@ -22,11 +21,11 @@
 
 #### Descrição
 
-\<É um jogo para um jogador que é um peixe cujo objetivo é comer todos os peixes de tamanho menor ou igual ao próprio e não ser comido pelos peixes maiores. Cada peixe que se come dá pontos que variam de acordo com o tamanho do peixe. Ao longo do jogo o peixe principal vai aumentando de tamanho e tornando-se capaz de se alimentar de peixes maiores.\>
+É um jogo para um jogador, que é um peixe, cujo objetivo é comer todos os peixes de tamanho menor ou igual ao próprio e não ser comido pelos peixes maiores. Cada peixe que se come dá pontos que variam de acordo com o tamanho do peixe. Ao longo do jogo o peixe principal vai aumentando de tamanho e tornando-se capaz de se alimentar de peixes maiores.
 
 #### UI
 
-![UI](https://github.com/Rikenunes8/gofish-atari/blob/master/Environment.png | widht40) 
+![UI](https://github.com/Rikenunes8/gofish-atari/blob/master/Environment.png) 
 
 ### Pacotes
 
