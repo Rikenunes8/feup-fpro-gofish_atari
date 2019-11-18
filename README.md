@@ -26,7 +26,7 @@
 
 #### UI
 
-![UI](https://github.com/Rikenunes8/gofish-atari/blob/master/Environment.png =250x250) 
+![UI](https://github.com/Rikenunes8/gofish-atari/blob/master/Environment.png | widht40) 
 
 ### Pacotes
 
@@ -40,6 +40,8 @@
 4. introduzir peixes aleatórios
 5. identificar choque entre peixes
 6. definir choque com determinados peixes
-7. contar pontos
+7. alterar tamanho do peixe original
+8. contar pontos
+
 
 18/11/2019
