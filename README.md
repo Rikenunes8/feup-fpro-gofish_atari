@@ -34,20 +34,20 @@
 #### Tarefas
 
 1. FUNDO
-    1. Ciclo desenhar ceu e mar com diferentes tons
-    1. Desenhar platon e sol
+   1. Ciclo desenhar ceu e mar com diferentes tons
+   1. Desenhar platon e sol
 1. JOGADOR
-    1. desenhar o peixe
-    1. controlar o peixe com as teclas de cursor
+   1. desenhar o peixe
+   1. controlar o peixe com as teclas de cursor
 1. INIMIGOS / COMIDA
-    1. aleatória inicialmente
-      1. lista de posições
-      1. lista de direcções
-    1. colisão
+   1. aleatória inicialmente
+      * lista de posições
+      * lista de direcções
+   1. colisão
       1. se peixe maior / lula => morre
       1. se peixe menor (igual?) => aumenta 1 ponto de "energia"
       1. quando energia chega a certo ponto, aumentar de tamanho
-    1. criar peixes às vezes / destruir peixes quando chegam ao canto do ecrã
+   1. criar peixes às vezes / destruir peixes quando chegam ao canto do ecrã
 1. ANIMAÇÃO / PONTOS / MENU
 
 18/11/2019
