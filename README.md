@@ -1,6 +1,6 @@
 # Projeto Go Fish
 ### FPRO/MIEIC, 2019/20
-### Henrique Ribeiro Nunees up201906852@fe.up.pt
+### Henrique Ribeiro Nunes up201906852@fe.up.pt
 ### 1MIEIC07 
 
 #### Objetivo
