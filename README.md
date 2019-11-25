@@ -21,7 +21,7 @@ Criar um clone do jogo [Go Fish](http://www.free80sarcade.com/2600_Go_Fish.php) 
 
 #### Tarefas
 
-1. **FUNDO**
+1. ~**FUNDO**~
    1. Ciclo desenhar ceu e mar com diferentes tons X
    1. Ondas com [elipses](https://www.pygame.org/docs/ref/draw.html) X/
    1. Desenhar platon e sol X
