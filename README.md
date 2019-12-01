@@ -35,7 +35,7 @@ Criar um clone do jogo [Go Fish](http://www.free80sarcade.com/2600_Go_Fish.php) 
    1. colisão
       1. se peixe maior / lula => morre
       1. ~se peixe menor (igual?) => aumenta 1 ponto de "energia"~
-      1. quando energia chega a certo ponto, aumentar de tamanho
+      1. ~quando energia chega a certo ponto, aumentar de tamanho~
    1. ~criar peixes às vezes / destruir peixes quando chegam ao canto do ecrã~
 1. **ANIMAÇÃO / PONTOS / MENU**
 
