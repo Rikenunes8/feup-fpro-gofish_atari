@@ -55,24 +55,36 @@ RLAYelipse = (resizew(layerelipser[0]), resizeh(layerelipser[1]))
 # Constants and variables
 x = WIDTH // 2
 y = HEIGHT // 2
-MAXSPEEDX = 0.15
-MAXSPEEDY = 0.1
+MAXSPEEDX = 0.09
+MAXSPEEDY = 0.055
 velx = 0
 vely = 0
 ACCELX = 0.0003
 ACCELY = 0.0003
-FRICTIONX = 0.004
-FRICTIONY = 0.004
+FRICTIONX = 0.001
+FRICTIONY = 0.001
 
 # Player
-player1 = pygame.image.load('Player1.png') #25x9
-player1i = pygame.transform.flip(player1, True, False)
-savedp = player1
+p1 = pygame.image.load('Player1.png')
+P1_SIZE = (33.33, 11.25)
+player1 = (p1, pygame.transform.flip(p1, True, False))
+p2 = pygame.image.load('Player2.png')
+P2_SIZE = (37.5, 15)
+player2 = (p2, pygame.transform.flip(p2, True, False))
+savedp = player1[0]
+level = 0
+energy = 0
+p_list = (player1, player2)
 
 # Enemies
-e1 = pygame.image.load('Enemy1.png')
-enemy1 = (e1, pygame.transform.flip(e1, True, False)) #25x9
+e1 = pygame.image.load('Enemy1.png') # 255, 255, 255
+E1_SIZE = (33.33, 11.25)
+enemy1 = (e1, pygame.transform.flip(e1, True, False), (33.33, 11.25))
 
+e2 = pygame.image.load('Enemy2.png') # 255, 255, 255
+E2_SIZE = (37.5, 15)
+enemy2 = (e2, pygame.transform.flip(e2, True, False), (37.5, 15))
+e_list = ((enemy1, 0), (enemy2, 1))
 cenemies = 0
 cenemiesvar = 50
 #enemiesposy = list(range(HLAYsea, HEIGHT-HLAYpoints-20, 25))*2
@@ -83,7 +95,7 @@ enemiesposx = [-30, WIDTH]
 enemiesori = [1, -1]
 enemiespresents = []
 
-dict_sizes = {'player1':0, 'player2':1, 'enemy1':0, 'enemy2':1}
+
 # Recognize events
 def handle_events():
     global x, y, vely, velx, keys
@@ -118,7 +130,6 @@ def draw_background():
         celip = 0
     for i in range(3):
         screen.blit(seaweed, (WIDTH//6*(2*i+1)-29, HEIGHT-HLAYpoints-58))
-
 
 
 clock = pygame.time.Clock()
@@ -157,41 +168,46 @@ while True:
     if HLAYsky<= y+vely*dt <= HEIGHT-HLAYpoints-8:
         y += vely*dt
     if keys[pygame.K_LEFT]:
-        screen.blit(player1, (x, y))
-        savedp = player1
-    if keys[pygame.K_RIGHT]:
-        screen.blit(player1i, (x, y))
-        savedp = player1i
+        screen.blit(p_list[level][0], (x, y))
+        savedp = p_list[level][0]
+    elif keys[pygame.K_RIGHT]:
+        screen.blit(p_list[level][1], (x, y))
+        savedp = p_list[level][1]
     else:
         screen.blit(savedp, (x, y))
     # Generate enemy
     if cenemies == cenemiesvar:
+        ee = random.choice(e_list)
         ex = random.choice(enemiesposx)
         ey = random.choice(enemiesposy)
         eo = [-1 if ex == WIDTH else 1][0]
-        ev = random.randint(1, 7)
+        ev = random.randint(1, 3)
     #    enemiesposy.remove(ey)
-        enemiespresents.append((ex, ey, eo, ev))
+        enemiespresents.append((ee,ex, ey, eo, ev))
         cenemiesvar = random.randint(20, 100)
         cenemies = 0
     # Count cycles
     cenemies += 1
 
     # Move enemies
-    for c, (enemy_x, enemy_y, enemy_o, enemy_v) in enumerate(enemiespresents):
+    for c, (enemy_l, enemy_x, enemy_y, enemy_o, enemy_v) in enumerate(enemiespresents):
         if enemy_o == -1:
-            screen.blit(enemy1[0], (enemy_x, enemy_y))
+            screen.blit(enemy_l[0][0], (enemy_x, enemy_y))
             enemy_x -= enemy_v
-            enemiespresents[c] = (enemy_x, enemy_y, enemy_o, enemy_v)
+            enemiespresents[c] = (enemy_l,enemy_x, enemy_y, enemy_o, enemy_v)
         else:
-            screen.blit(enemy1[1], (enemy_x, enemy_y))
+            screen.blit(enemy_l[0][1], (enemy_x, enemy_y))
             enemy_x += enemy_v
-            enemiespresents[c] = (enemy_x, enemy_y, enemy_o, enemy_v)
-        if (enemy_x <= x <= enemy_x + 25 and enemy_y <= y <= enemy_y+9) or (enemy_x <= x+25 <= enemy_x + 25 and enemy_y <= y+8 <= enemy_y+9) or (enemy_x <= x+25 <= enemy_x + 25 and enemy_y <= y <= enemy_y+9) or (enemy_x <= x <= enemy_x + 25 and enemy_y <= y+8 <= enemy_y+9):
-            print('colision')
-            print()
-            
-            enemiespresents.remove((enemy_x, enemy_y, enemy_o, enemy_v))
+            enemiespresents[c] = (enemy_l, enemy_x, enemy_y, enemy_o, enemy_v)
+        if (enemy_x <= x <= enemy_x + enemy_l[0][2][0] and enemy_y <= y <= enemy_y+enemy_l[0][2][1]) or (enemy_x <= x+P1_SIZE[0] <= enemy_x + enemy_l[0][2][0] and enemy_y <= y+P1_SIZE[1] <= enemy_y+enemy_l[0][2][1]) or (enemy_x <= x+P1_SIZE[0] <= enemy_x+enemy_l[0][2][0] and enemy_y <= y <= enemy_y+enemy_l[0][2][1]) or (enemy_x <= x <= enemy_x + enemy_l[0][2][0] and enemy_y <= y+P1_SIZE[1] <= enemy_y+enemy_l[0][2][1]):
+            if enemy_l[1] > level:
+                print('DEAD')
+            else:
+                enemiespresents.remove((enemy_l, enemy_x, enemy_y, enemy_o, enemy_v))
+                energy += 1
+
+    if energy == 5:
+        level = 1
 
 
 #    for enemy_x, enemy_y in zip(enemiesposx, enemiesposy):
