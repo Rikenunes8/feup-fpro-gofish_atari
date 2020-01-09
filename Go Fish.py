@@ -62,8 +62,8 @@ MAXSPEEDX = 0.2#0.09
 MAXSPEEDY = 0.1#0.055
 velx = 0
 vely = 0
-ACCELX = 0.0003
-ACCELY = 0.0003
+ACCELX = 0.0004
+ACCELY = 0.0004
 FRICTIONX = 0.003
 FRICTIONY = 0.002
 
@@ -101,7 +101,8 @@ p9 = pygame.image.load('Player9.png')
 player9 = (p9, pygame.transform.flip(p9, True, False),(125, 30))
 
 
-savedp = player1[0]
+savedo = 0
+savedp = player1
 level = 0
 energy = 0
 best_score = 0
@@ -239,7 +240,7 @@ def menu():
     screen.blit(start, (11*WIDTH//32, 5*HEIGHT//6))
     menu_events()
 
-
+# Draw background
 def draw_background():
     # Draw background
     global celip
@@ -258,12 +259,12 @@ def draw_background():
     for i in range(3):
         screen.blit(seaweed, (WIDTH//6*(2*i+1)-29, HEIGHT-HLAYpoints-58))
 
-
+# Draw score
 def draw_score(e, w, h):
     text = largeFont.render(str(e).zfill(4), 1, col['white'])
     screen.blit(text, (w, h))
 
-
+# Colisions
 def overlaps(x1, y1, w1, h1, x2, y2, w2, h2):
     return not (x1+w1 < x2 or x1 > x2+w2 or y1+h1 < y2 or y1 > y2+h2)
 
@@ -272,6 +273,7 @@ clock = pygame.time.Clock()
 menuf = True
 
 keys = pygame.key.get_pressed()
+spawn_time = 0
 
 # Main
 while True:
@@ -307,98 +309,105 @@ while True:
         if not DEAD:
             if 0 <= x+velx*dt <= WIDTH-p_list[level][2][0]:
                 x += velx*dt
+            elif x+velx*dt > WIDTH-p_list[level][2][0]:
+                x = WIDTH-p_list[level][2][0]
+            else:
+                x = 0
             if HLAYsky <= y+vely*dt <= HEIGHT-HLAYpoints-p_list[level][2][1]:
                 y += vely*dt
             if keys[pygame.K_LEFT]:
                 screen.blit(p_list[level][0], (x, y))
-                savedp = p_list[level][0]
+                savedo = 0
             elif keys[pygame.K_RIGHT]:
                 screen.blit(p_list[level][1], (x, y))
-                savedp = p_list[level][1]
+                savedo = 1
             else:
+                savedp = p_list[level][savedo]
                 screen.blit(savedp, (x, y))
 
     # Generate enemy
     if yweights != [0,0,0,0,0,0,0,0]:
-        if cenemies == cenemiesvar:
+       # if cenemies == cenemiesvar:
+        if pygame.time.get_ticks() >= spawn_time:
             ee = random.choices(e_list, weight)
             ex = random.choice(enemiesposx)
             ey = random.choices(enemiesposy, yweights)
             yweights[dposy[ey[0]]] = 0
             eo = [-1 if ex == WIDTH else 1][0]
             if ee[0][1] == 98:
-                ev = random.randint(2,4)
+                ev = random.randint(6,15)/100  #2,4
             else:
-                ev = random.randint(3, 7)
+                ev = random.randint(10, 25)/100  #3,7
             enemiespresents.append((ee[0], ex, ey[0], eo, ev))
-            cenemiesvar = random.randint(10, 30)
-            cenemies = 0
-
+            cenemiesvar = random.randint(300, 1500)  # daqui a qtos milisegundos aparecem inimigos
+            # cenemies = 0
+            spawn_time = pygame.time.get_ticks() + cenemiesvar
+            
         # Count cycles
-        cenemies += 1
+        # cenemies += 1
 
     # Move enemies
     for c, (enemy_l, enemy_x, enemy_y, enemy_o, enemy_v) in enumerate(enemiespresents):
         if enemy_l[1] <= level-3:
             if enemy_o == -1:
                 screen.blit(enemy_l[0][0], (enemy_x, enemy_y))
-                if enemy_x > x and (y < enemy_y and y > enemy_y-enemy_l[0][2][1]):
-                    enemy_v = 15
+                if enemy_x > x and not(y+p_list[level][2][1] < enemy_y or y > enemy_y+enemy_l[0][2][1]):
+                    enemy_v = 45/100
                     enemy_o = 1
-                    enemy_x += enemy_v
+                    enemy_x += enemy_v*dt
                     enemiespresents[c] = (enemy_l, enemy_x, enemy_y, enemy_o, enemy_v)
                 else:
-                    enemy_x -= enemy_v
+                    enemy_x -= enemy_v*dt
                     enemiespresents[c] = (enemy_l, enemy_x, enemy_y, enemy_o, enemy_v)
             elif enemy_o == 1:
                 screen.blit(enemy_l[0][1], (enemy_x, enemy_y))
-                if enemy_x < x and (y < enemy_y and y > enemy_y - enemy_l[0][2][1]):
-                    enemy_v = 20
+                if enemy_x < x and not(y+p_list[level][2][1] < enemy_y or y > enemy_y+enemy_l[0][2][1]):
+                    enemy_v = 45/100
                     enemy_o = -1
-                    enemy_x -= enemy_v
+                    enemy_x -= enemy_v*dt
                     enemiespresents[c] = (enemy_l, enemy_x, enemy_y, enemy_o, enemy_v)
                 else:
-                    enemy_x += enemy_v
+                    enemy_x += enemy_v*dt
                     enemiespresents[c] = (enemy_l, enemy_x, enemy_y, enemy_o, enemy_v)
-        # Movem
+
         elif enemy_l[1] == 99:
             if enemy_o == -1:
                 if e99c<40:
                     screen.blit(enemy_l[0][0], (enemy_x, enemy_y))
                 else:
                     screen.blit(enemy_l[0][3], (enemy_x, enemy_y))
-                if enemy_x < x and (y < enemy_y and y > enemy_y-enemy_l[0][2][1]):
+                if enemy_x < x and not(y+p_list[level][2][1] < enemy_y or y > enemy_y+enemy_l[0][2][1]):
                     enemy_o = 1
-                    enemy_x += enemy_v
+                    enemy_x += enemy_v*dt
                     enemiespresents[c] = (enemy_l, enemy_x, enemy_y, enemy_o, enemy_v)
                 else:
-                    enemy_x -= enemy_v
+                    enemy_x -= enemy_v*dt
                     enemiespresents[c] = (enemy_l, enemy_x, enemy_y, enemy_o, enemy_v)
             elif enemy_o == 1:
                 if e99c<40:
                     screen.blit(enemy_l[0][1], (enemy_x, enemy_y))
                 else:
                     screen.blit(enemy_l[0][4], (enemy_x, enemy_y))
-                if enemy_x > x and (y < enemy_y and y > enemy_y - enemy_l[0][2][1]):
+                if enemy_x > x and not(y+p_list[level][2][1] < enemy_y or y > enemy_y+enemy_l[0][2][1]):
                     enemy_o = -1
-                    enemy_x -= enemy_v
+                    enemy_x -= enemy_v*dt
                     enemiespresents[c] = (enemy_l, enemy_x, enemy_y, enemy_o, enemy_v)
                 else:
-                    enemy_x += enemy_v
+                    enemy_x += enemy_v*dt
                     enemiespresents[c] = (enemy_l, enemy_x, enemy_y, enemy_o, enemy_v)
                 
         elif enemy_o == -1:
-            if enemy_l[1] == 98 and enemy_x > x and (y < enemy_y and y > enemy_y-enemy_l[0][2][1]):
-                enemy_v += 1
+            if enemy_l[1] == 98 and enemy_x > x and not(y+p_list[level][2][1] < enemy_y or y > enemy_y+enemy_l[0][2][1]):
+                enemy_v += 1.5/100
             screen.blit(enemy_l[0][0], (enemy_x, enemy_y))
-            enemy_x -= enemy_v
+            enemy_x -= enemy_v*dt
             enemiespresents[c] = (enemy_l, enemy_x, enemy_y, enemy_o, enemy_v)
             
         elif enemy_o == 1:
-            if enemy_l[1] == 98 and enemy_x < x and (y < enemy_y and y > enemy_y - enemy_l[0][2][1]):
-                enemy_v += 1
+            if enemy_l[1] == 98 and -enemy_l[0][2][0] < enemy_x < x and not(y+p_list[level][2][1] < enemy_y or y > enemy_y+enemy_l[0][2][1]):
+                enemy_v += 1.5/100
             screen.blit(enemy_l[0][1], (enemy_x, enemy_y))
-            enemy_x += enemy_v
+            enemy_x += enemy_v*dt
             enemiespresents[c] = (enemy_l, enemy_x, enemy_y, enemy_o, enemy_v)
 
         if enemy_x < -204 or enemy_x > WIDTH + enemy_l[0][2][0]: # -enemy_l[0][2][0]
@@ -421,7 +430,7 @@ while True:
         e99c = 0
 
     # Grow player
-    if energy >= 800:  # 1300
+    if energy >= 1:  # 1300
         level = 8
         weight = [1, 1, 2, 3, 3, 3, 4, 4, 5, 6, 7, 8, 8, 7, 6, 4]
     elif energy >= 400:  # 829
@@ -468,8 +477,8 @@ while True:
             energy = 0
             level = 0
             x = WIDTH // 2
-            y = HEIGHT // 2
-            velx, vely = 0, 0
+            y = HEIGHT-HLAYpoints-40
+            velx, vely = 0, -0.5
             savedp = player1[0]
             enemiespresents = []
             weight = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
