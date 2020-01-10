@@ -58,8 +58,8 @@ RLAYelipse = (resizew(layerelipser[0]), resizeh(layerelipser[1]))
 # Constants and variables
 x = WIDTH // 2
 y = HEIGHT-HLAYpoints-40
-MAXSPEEDX = 0.2#0.09
-MAXSPEEDY = 0.1#0.055
+MAXSPEEDX = 0.2
+MAXSPEEDY = 0.1
 velx = 0
 vely = 0
 ACCELX = 0.0004
@@ -67,12 +67,13 @@ ACCELY = 0.0004
 FRICTIONX = 0.003
 FRICTIONY = 0.002
 
-# Player ()
+# Players
+
 DEAD = False
 skull = pygame.image.load('Skull.png')
 skullt = 0
 
-# 186, 186, 62
+# Player color 186, 186, 62
 p1 = pygame.image.load('Player1.png')
 player1 = (p1, pygame.transform.flip(p1, True, False), (33.33, 11.25))
 
@@ -109,6 +110,7 @@ best_score = 0
 p_list = (player1, player2, player3, player4, player5, player6, player7, player8, player9)
 
 # Enemies
+
 e1 = pygame.image.load('Enemy1.png')  # 255, 255, 255
 # E1_SIZE = (33.33, 11.25) = (8,3)
 enemy1 = (e1, pygame.transform.flip(e1, True, False), (33.33, 11.25))
@@ -256,8 +258,8 @@ def draw_background():
     celip += 1
     if celip >= WIDTH//4:
         celip = 0
-    for i in range(3):
-        screen.blit(seaweed, (WIDTH//6*(2*i+1)-29, HEIGHT-HLAYpoints-58))
+    # for i in range(3):
+    #     screen.blit(seaweed, (WIDTH//6*(2*i+1)-29, HEIGHT-HLAYpoints-58))
 
 # Draw score
 def draw_score(e, w, h):
@@ -325,9 +327,12 @@ while True:
                 savedp = p_list[level][savedo]
                 screen.blit(savedp, (x, y))
 
+    # Draw seaweed after player
+    for i in range(3):
+        screen.blit(seaweed, (WIDTH//6*(2*i+1)-29, HEIGHT-HLAYpoints-58))
+
     # Generate enemy
     if yweights != [0,0,0,0,0,0,0,0]:
-       # if cenemies == cenemiesvar:
         if pygame.time.get_ticks() >= spawn_time:
             ee = random.choices(e_list, weight)
             ex = random.choice(enemiesposx)
@@ -339,12 +344,9 @@ while True:
             else:
                 ev = random.randint(10, 25)/100  #3,7
             enemiespresents.append((ee[0], ex, ey[0], eo, ev))
-            cenemiesvar = random.randint(300, 1500)  # daqui a qtos milisegundos aparecem inimigos
-            # cenemies = 0
+            cenemiesvar = random.randint(300, 1500)
             spawn_time = pygame.time.get_ticks() + cenemiesvar
-            
-        # Count cycles
-        # cenemies += 1
+
 
     # Move enemies
     for c, (enemy_l, enemy_x, enemy_y, enemy_o, enemy_v) in enumerate(enemiespresents):
@@ -430,7 +432,7 @@ while True:
         e99c = 0
 
     # Grow player
-    if energy >= 1:  # 1300
+    if energy >= 800:  # 1300
         level = 8
         weight = [1, 1, 2, 3, 3, 3, 4, 4, 5, 6, 7, 8, 8, 7, 6, 4]
     elif energy >= 400:  # 829
